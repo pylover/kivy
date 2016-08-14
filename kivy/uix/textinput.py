@@ -1184,7 +1184,7 @@ class TextInput(FocusBehavior, Widget):
         for i in range(0, len(l[cy])):
             if _get_text_width(l[cy][:i], _tab_width, _label_cached) + \
                   _get_text_width(l[cy][i], _tab_width, _label_cached) * 0.6 + \
-                  padding_left > cx + scrl_x:
+                  padding_left > cxo + scrl_x:
                 cx = i
                 break
         return cx, cy
@@ -2063,21 +2063,30 @@ class TextInput(FocusBehavior, Widget):
         w, h = size
         x1 = x
         x2 = x + w
+        line = None
         if line_num == s1r:
-            lines = _lines[line_num]
+            line = _lines[line_num]
             x1 -= self.scroll_x
-            x1 += _get_text_width(lines[:s1c], tab_width, _label_cached)
+            x1 += _get_text_width(line[:s1c], tab_width, _label_cached)
         if line_num == s2r:
-            lines = _lines[line_num]
-            x2 = (x - self.scroll_x) + _get_text_width(lines[:s2c],
+            line = _lines[line_num]
+            x2 = (x - self.scroll_x) + _get_text_width(line[:s2c],
                                                        tab_width,
                                                        _label_cached)
+
         width_minus_padding = width - (padding_right + padding_left)
         maxx = x + width_minus_padding
         if x1 > maxx:
             return
+
+        if self.rtl:
+            r = x + w
+            x1 = r - (x1 - x)
+            x2 = r - (x2 - x)
+
         x1 = max(x1, x)
         x2 = min(x2, x + width_minus_padding)
+
         canvas_add(Color(*selection_color, group='selection'))
         canvas_add(Rectangle(
             pos=(x1, pos[1]), size=(x2 - x1, size[1]), group='selection'))
