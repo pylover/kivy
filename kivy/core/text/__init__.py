@@ -46,7 +46,7 @@ from kivy.core.text.text_layout import layout_text, LayoutWord
 from kivy.resources import resource_find, resource_add_path
 from kivy.compat import PY2
 from kivy.setupconfig import USE_SDL2
-from kivy.core.text.globalization import arabic_reshape, arabic_bidi, has_arabic_letters
+from kivy.core.text.globalization import apply_fribidi
 
 DEFAULT_FONT = 'Roboto'
 
@@ -519,8 +519,8 @@ class LabelBase(object):
             elif halign == 'right':
                 x = max(0, int(w - lw - xpad))
 
-            if rtl:
-                line = arabic_bidi(line)
+            # if rtl:
+            #     line = arabic_bidi(line)
 
             # right left justify
             # divide left over space between `spaces`
@@ -612,14 +612,14 @@ class LabelBase(object):
         options['strip'] = strip = (options['strip'] or
                                     options['halign'] == 'justify')
         uw, uh = options['text_size'] = self._text_size
+
+        # Reshaping the text for multilingualization support,
+        # if options.get('rtl'):  # and reshaper.has_arabic_letters(self.text):
+        #     text = apply_fribidi(self.text)
+        # else:
+        #     text = self.text
+
         text = self.text
-
-        # Reshaping the text for arabic support,
-        if options.get('rtl') and has_arabic_letters(self.text):
-            text = arabic_reshape(self.text)
-        else:
-            text = self.text
-
         if strip:
             text = text.strip()
         if uw is not None and options['shorten']:

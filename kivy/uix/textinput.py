@@ -139,7 +139,6 @@ Control + r     redo
     :class:`~kivy.uix.behaviors.emacs.EmacsBehavior`.
 
 '''
-from kivy.core.text.globalization import arabic_reshape
 
 __all__ = ('TextInput', )
 
@@ -172,7 +171,7 @@ from kivy.properties import StringProperty, NumericProperty, \
     BooleanProperty, AliasProperty, OptionProperty, \
     ListProperty, ObjectProperty, VariableListProperty
 
-from kivy.core.text.globalization import arabic_reshape
+from kivy.core.text.globalization import apply_fribidi
 
 
 Cache_register = Cache.register
@@ -1814,7 +1813,7 @@ class TextInput(FocusBehavior, Widget):
         # Refresh all the lines from a new text.
         # By using cache in internal functions, this method should be fast.
         if self.rtl:
-            text = arabic_reshape(text)
+            text = apply_fribidi(text)
 
         mode = 'all'
         if len(largs) > 1:

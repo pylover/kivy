@@ -1,14 +1,19 @@
+#
+# try:
+#     from rtl import rtl as _rtl, reshaper
+# except ImportError:
+#     raise ImportError('The rtl package was not installed, You have to install it to use this feature.')
+#
+#
+# def apply_fribidi(data):
+#     return _rtl(data)
 
-try:
-    from rtl import rtl as _rtl
-    from rtl.reshaper import has_arabic_letters
-except ImportError:
-    raise ImportError('The rtl package was not installed, You have to install it to use this feature.')
+#
+from fribidi import logical_to_visualize
+def apply_fribidi(data):
+    return logical_to_visualize(data)
 
-
-def arabic_reshape(text):
-    return _rtl(text, bidi=False)
-
-
-def arabic_bidi(data):
-    return _rtl(data, reshape=False, digits=True)
+#
+# from pyfribidi import log2vis
+# def apply_fribidi(data):
+#     return log2vis(data)

@@ -248,6 +248,7 @@ from kivy.properties import StringProperty, OptionProperty, \
     NumericProperty, BooleanProperty, ReferenceListProperty, \
     ListProperty, ObjectProperty, DictProperty
 from kivy.utils import get_hex_from_color
+from kivy.core.text.globalization import apply_fribidi
 
 
 class Label(Widget):
@@ -300,6 +301,10 @@ class Label(Widget):
             # markup have change, we need to change our rendering method.
             d = Label._font_properties
             dkw = dict(list(zip(d, [getattr(self, x) for x in d])))
+
+            if self.rtl:
+                dkw['text'] = apply_fribidi(dkw['text'])
+
             if markup:
                 self._label = CoreMarkupLabel(**dkw)
             else:
